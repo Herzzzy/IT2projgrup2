@@ -12,6 +12,7 @@ with open(filnavn, encoding="utf-8-sig") as fil:
     print("Headers:", overskrifter)
 
     total_streams_index = 2
+    sang_index = 1
     artist_index = 0  
 
     rad = list(filinnhold)
@@ -19,10 +20,10 @@ with open(filnavn, encoding="utf-8-sig") as fil:
     rad_index = random.randint(0, len(rad) - 1)
     rad_index2 = random.randint(0, len(rad) - 1)
     bestemt_rad = rad[rad_index]
-    bestemt_rad2 = rad[rad_index]
+    bestemt_rad2 = rad[rad_index2]
 
-    print("Artist, sang navn:", bestemt_rad[artist_index], "Totale Streams:", bestemt_rad[total_streams_index])
-    print("Har denne sangen flere eller færre avspillninger enn?", bestemt_rad2[artist_index])
+    print("Artist, sang navn:", bestemt_rad[artist_index], bestemt_rad[sang_index], "Totale Streams:", bestemt_rad[total_streams_index])
+    print("Har denne sangen flere eller færre avspillninger enn?", bestemt_rad2[artist_index], bestemt_rad2[sang_index])
     
     bruker_gjett = input("Trykk h for Høyere, og l for Lavere")
 
