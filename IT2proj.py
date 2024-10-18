@@ -16,10 +16,12 @@ with open(filnavn, encoding="utf-8-sig") as fil:
 
     rad = list(filinnhold)
 
-    if len(rad) > 0:
-        rad_index = random.randint(0, len(rad) - 1)
-        bestemt_rad = rad[rad_index]
+    rad_index = random.randint(0, len(rad) - 1)
+    rad_index2 = random.randint(0, len(rad) - 1)
+    bestemt_rad = rad[rad_index]
+    bestemt_rad2 = rad[rad_index]
 
-        print(f"Artist: {bestemt_rad[artist_index]}, Total Streams: {int(bestemt_rad[total_streams_index]):,d}")
-    else:
-        print("Raden finns ikke.")
+    print("Artist, sang navn:", bestemt_rad[artist_index], "Totale Streams:", bestemt_rad[total_streams_index])
+    print("Har denne sangen flere eller færre avspillninger enn?", bestemt_rad2[artist_index])
+    
+    bruker_gjett = int(input("Trykk h for Høyere, og l for Lavere")
