@@ -24,7 +24,7 @@ with open(filnavn, encoding="utf-8-sig") as fil:
     print("Artist, sang navn:", bestemt_rad[artist_index], "Totale Streams:", bestemt_rad[total_streams_index])
     print("Har denne sangen flere eller færre avspillninger enn?", bestemt_rad2[artist_index])
     
-    bruker_gjett = int(input("Trykk h for Høyere, og l for Lavere")
+    bruker_gjett = input("Trykk h for Høyere, og l for Lavere")
 
     if (bruker_gjett == 'h' and int(bestemt_rad2[total_streams_index]) > int(bestemt_rad[total_streams_index])) or \
        (bruker_gjett == 'l' and int(bestemt_rad2[total_streams_index]) < int(bestemt_rad[total_streams_index])):
