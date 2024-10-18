@@ -4,8 +4,9 @@ import random
 filnavn = "spotify_data.csv"
 
 with open(filnavn, encoding="utf-8-sig") as fil:
-    filinhold_ufiltrert = fil.read().replace("-", ",")
-    filinnhold = csv.reader(filinhold_ufiltrert.splitlines(), delimiter=",")
+    filinhold_ufiltrert = fil.read().replace("-", ";")
+    filinhold_ufiltrert2 = fil.read().replace(",", ";")
+    filinnhold = csv.reader(filinhold_ufiltrert2.splitlines(), delimiter=";")
 
     overskrifter = next(filinnhold)
     print("Headers:", overskrifter)
