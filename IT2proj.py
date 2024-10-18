@@ -20,4 +20,4 @@ with open(filnavn, encoding="utf-8-sig") as fil:
 
         print("Artist:", bestemt_rad[artist_index], "Total Streams:", bestemt_rad[total_streams_index])
     else:
-        print("No data rows found in the CSV.")
+        print("Raden finnes ikke")
