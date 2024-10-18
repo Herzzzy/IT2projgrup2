@@ -14,7 +14,6 @@ with open(filnavn, encoding="utf-8-sig") as fil:
 
     rad = list(filinnhold)
 
-
     if len(rad) > 0:
         rad_index = random.randint(0, len(rad) - 1)
         bestemt_rad = rad[rad_index]
