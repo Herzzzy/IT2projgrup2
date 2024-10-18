@@ -9,7 +9,7 @@ with open(filnavn, encoding="utf-8-sig") as fil:
     overskrifter = next(filinnhold)
     print("Headers:", overskrifter)
 
-    total_streams_index = 2 
+    total_streams_index = 1 
     artist_index = 0  
 
     rad = list(filinnhold)
