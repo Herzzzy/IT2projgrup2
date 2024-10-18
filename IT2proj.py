@@ -20,6 +20,6 @@ with open(filnavn, encoding="utf-8-sig") as fil:
         rad_index = random.randint(0, len(rad) - 1)
         bestemt_rad = rad[rad_index]
 
-        print("Artist:", bestemt_rad[artist_index], "Totale streams:", bestemt_rad[total_streams_index])
+        print(f"Artist: {bestemt_rad[artist_index]}, Total Streams: {int(bestemt_rad[total_streams_index]):,d}")
     else:
         print("Raden finns ikke.")
