@@ -4,12 +4,13 @@ import random
 filnavn = "spotify_data.csv"
 
 with open(filnavn, encoding="utf-8-sig") as fil:
-    filinnhold = csv.reader(fil, delimiter=",")
+    filinhold_ufiltrert = fil.read().replace("-", ",")
+    filinnhold = csv.reader(filinhold_ufiltrert.splitlines(), delimiter=",")
 
     overskrifter = next(filinnhold)
     print("Headers:", overskrifter)
 
-    total_streams_index = 1 
+    total_streams_index = 2
     artist_index = 0  
 
     rad = list(filinnhold)
@@ -18,6 +19,6 @@ with open(filnavn, encoding="utf-8-sig") as fil:
         rad_index = random.randint(0, len(rad) - 1)
         bestemt_rad = rad[rad_index]
 
-        print("Artist, sang navn:", bestemt_rad[artist_index], "Totale Streams:", bestemt_rad[total_streams_index])
+        print("Artist:", bestemt_rad[artist_index], "Totale streams:", bestemt_rad[total_streams_index])
     else:
-        print("Raden finnes ikke")
+        print("Raden finns ikke.")
