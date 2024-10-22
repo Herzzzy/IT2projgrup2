@@ -14,6 +14,11 @@ with open(filnavn, encoding="utf-8-sig") as fil:
 
     rad = list(filinnhold)
 
+if len(rad)>=100:  #Sørger for å ikke velge flere rader enn hundre i datasettet
+    rad=rad[:100]
+
+while True:
+
 def velg_sanger():
     ikke_riktig_sang = True
     while ikke_riktig_sang:
