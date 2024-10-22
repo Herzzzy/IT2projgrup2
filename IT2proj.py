@@ -14,16 +14,14 @@ with open(filnavn, encoding="utf-8-sig") as fil:
 
     rad = list(filinnhold)
 
-if len(rad)>=100:  #Sørger for å ikke velge flere rader enn hundre i datasettet
-    rad=rad[:100]
-
-while True:
+    if len(rad)>=100:
+        rad=rad[:100]
 
 def velg_sanger():
     ikke_riktig_sang = True
     while ikke_riktig_sang:
-        rad_index = rd.randint(2, 100)
-        rad_index2 = rd.randint(2, 100)
+        rad_index = rd.randint(2, 1000)
+        rad_index2 = rd.randint(2, 1000)
         forste_sang = rad[rad_index]
         andre_sang = rad[rad_index2]
 
@@ -31,6 +29,21 @@ def velg_sanger():
             ikke_riktig_sang = False
 
     return forste_sang, andre_sang
+
+def forkort_streams(streams):
+    streams = str(streams)
+
+    if len(streams) == 10:
+        streams = int(streams) // 10**8 
+        resultat = str(streams)[:1] + "," + str(streams)[1:]
+        return resultat + "B"
+    
+    elif 7 <= len(streams) <= 9:
+        streams = int(streams) // 10**6 
+        resultat = str(streams)
+        return resultat + "M"
+    
+    return streams
 
 pyg.init()
 
@@ -62,6 +75,12 @@ run = True
 while run:
 
     delta_tid = klokke.tick(60) 
+
+    left_area = pyg.Rect(0, 0, 600, 800)
+    right_area = pyg.Rect(600, 0, 600, 800)
+
+    mouse_click = pyg.mouse.get_pressed()
+    mouse_pos = pyg.mouse.get_pos() 
 
     skjerm.fill((skjerm_farge))
 
@@ -96,30 +115,30 @@ while run:
         if start_tekst:
             skriv_tekst(forste_sang[sang_index], tekst_font, (0, 0, 0), 300, 300)
             skriv_tekst(f"-{forste_sang[artist_index]}", tekst_font, (0, 0, 0), 300, 400)
-            skriv_tekst(forste_sang[total_streams_index], tekst_font, (0, 0, 0), 300, 500)
+            skriv_tekst(forkort_streams(forste_sang[total_streams_index]), tekst_font, (0, 0, 0), 300, 500)
             skriv_tekst(andre_sang[sang_index], tekst_font, (0, 0, 0), 900, 300)
             skriv_tekst(f"-{andre_sang[artist_index]}", tekst_font, (0, 0, 0), 900, 400)
             skriv_tekst("..?..", tekst_font, (0, 0, 0), 900, 500)
         else:
             if bruker_gjett == "h" and int(forste_sang[total_streams_index]) > int(andre_sang[total_streams_index]) or bruker_gjett == "l" and int(forste_sang[total_streams_index]) < int(andre_sang[total_streams_index]):
                 skriv_tekst(f"Det er riktig, {storst_sang} har", tekst_font, (0, 0, 0), 600, 300)
-                skriv_tekst(f"{mest_streams - minst_streams} flere streams", tekst_font, (0, 0, 0), 600, 400)
+                skriv_tekst(f"{forkort_streams(mest_streams - minst_streams)} flere streams", tekst_font, (0, 0, 0), 600, 400)
                 skriv_tekst(f"enn {minst_sang}", tekst_font, (0, 0, 0), 600, 500)
                 neste_niva = True
                 rikitg = True
             else:
                 skriv_tekst(f"Det er feil, {storst_sang} har", tekst_font, (0, 0, 0), 600, 300)
-                skriv_tekst(f"{mest_streams - minst_streams} flere streams", tekst_font, (0, 0, 0), 600, 400)
+                skriv_tekst(f"{forkort_streams(mest_streams - minst_streams)} flere streams", tekst_font, (0, 0, 0), 600, 400)
                 skriv_tekst(f"enn {minst_sang}", tekst_font, (0, 0, 0), 600, 500)
                 neste_niva = True
 
-        tast = pyg.key.get_pressed()
-        if tast[pyg.K_h] and start_tekst:
-            bruker_gjett = "h"
-            start_tekst = False
-        if tast[pyg.K_l] and start_tekst:
-            bruker_gjett = "l"
-            start_tekst = False
+        if mouse_click[0] and start_tekst: 
+            if left_area.collidepoint(mouse_pos): 
+                bruker_gjett = "h"
+                start_tekst = False
+            elif right_area.collidepoint(mouse_pos):  
+                bruker_gjett = "l"
+                start_tekst = False
 
     else: 
         if antall_riktig >= 2:
