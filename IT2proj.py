@@ -76,12 +76,12 @@ leaderboard = False
 instillinger = False
 hoyre_tekst_farge = 255, 255, 255
 venstre_tekst_farge = 255, 255, 255
+pa_nytt_farge = 255, 255, 255
+tokk_feil = False
 
 forste_sang, andre_sang = velg_sanger()
 
 run = True
-pyg.mixer.music.load("game_music.mp3")
-pyg.mixer.music.play(-1)
 while run:
 
     delta_tid = klokke.tick(60)
@@ -115,7 +115,7 @@ while run:
             horl_farge = 0, 0, 0
 
         if leaderboard_rect.collidepoint(mouse_pos):
-            ftl_farge = 0, 0, 255
+            leaderboard_farge_farge = 0, 0, 255
             if mouse_click[0]:
                 leaderboard = True
                 gamemeny = False
@@ -143,7 +143,7 @@ while run:
             pyg.draw.rect(skjerm, (75, 75, 255), hoyre_omrade)
 
 
-            if spill_ferdig < 10:
+            if tokk_feil == False:
 
                 skriv_tekst(f"{antall_riktig}/10", tekst_font_mindre, (255, 255, 255), 70, 50)
 
@@ -162,8 +162,7 @@ while run:
                     neste_niva_delay += delta_tid 
                     if neste_niva_delay > 5000:
                         neste_niva = False
-                        if rikitg:
-                            antall_riktig += 1
+                        antall_riktig += 1
                         start_tekst = True
                         bruker_gjett = None
                         neste_niva_delay = 0
@@ -216,7 +215,7 @@ while run:
                         skriv_tekst(f"Det er feil, {storst_sang} har", tekst_font, (255, 255, 255), 600, 300)
                         skriv_tekst(f"{forkort_streams(mest_streams - minst_streams)} flere streams", tekst_font, (255, 255, 255), 600, 400)
                         skriv_tekst(f"enn {minst_sang}", tekst_font, (255, 255, 255), 600, 500)
-                        neste_niva = True
+                        tokk_feil = True
                 
                 tid_etter_start = pyg.time.get_ticks()
 
@@ -243,14 +242,20 @@ while run:
                         venstre_tekst_farge = 255, 255, 255
 
             else: 
-                if antall_riktig >= 5:
-                    skriv_tekst("Bra jobba!", tekst_font, (0, 0, 0), 600, 300)
-                    skriv_tekst(f"Du fikk {antall_riktig}/3 riktige", tekst_font, (0, 0, 0), 600, 400)
-                elif 0 < antall_riktig < 5:
-                    skriv_tekst(f"Du fikk bare {antall_riktig}/3 riktig", tekst_font, (0, 0, 0), 600, 400)
+                skriv_tekst(f"Bra jobba, du fikk ", tekst_font, (255, 255, 255), 600, 300)
+                skriv_tekst(f" {antall_riktig}, antall riktig", tekst_font, (255, 255, 255), 600, 400)
+                pa_nytt_tekst = tekst_font_mindre2.render("gå til gamemeny", True, (pa_nytt_farge))
+                pa_nytt_rect = pa_nytt_tekst.get_rect(center=(600, 500))
+                skjerm.blit(pa_nytt_tekst, pa_nytt_rect)
+                if pa_nytt_rect.collidepoint(mouse_pos):
+                    pa_nytt_farge = 200, 200, 200
+                    if mouse_click[0]:
+                        higher_or_lower = False
+                        gamemeny = True
                 else:
-                    skriv_tekst("damn", tekst_font, (0, 0, 0), 600, 300)
-                    skriv_tekst(f"du fikk ingen riktig", tekst_font, (0, 0, 0), 600, 400)
+                    pa_nytt_farge = 255, 255, 255
+
+                        
         else:
             #skriv settings in her
             ma_bare_ha_noe_her = 3
@@ -258,18 +263,6 @@ while run:
     for event in pyg.event.get():
         if event.type == pyg.QUIT:
             run = False
-
-    
-
-
-while run:  
-    for event in pyg.event.get():     
-        if event.type==pyg.quit():
-            run = False
-
-    pyg.display.update()
-
-pyg.mixer.music.stop()
 
     pyg.display.update()
 
