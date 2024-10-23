@@ -95,7 +95,7 @@ while run:
         horl_rect = horl_tekst.get_rect(center=(600, 400))
         skjerm.blit(horl_tekst, horl_rect)
 
-        leaderboard_tekst = tekst_font_mindre2.render("Finish the lyrics", True, leaderboard_farge)
+        leaderboard_tekst = tekst_font_mindre2.render("Leaderboard", True, leaderboard_farge)
         leaderboard_rect = leaderboard_tekst.get_rect(center=(600, 470))
         skjerm.blit(leaderboard_tekst, leaderboard_rect)
 
