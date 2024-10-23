@@ -53,7 +53,7 @@ tekst_font_mindre = pyg.font.SysFont(None, 50, bold=True)
 tekst_font_storre = pyg.font.SysFont(None, 150, bold=True)
 tekst_font_mindre2 = pyg.font.SysFont(None, 75, bold=True)
 horl_farge = 0, 0, 0
-ftl_farge = 0, 0, 0
+leaderboard_farge = 0, 0, 0
 inst_farge = 0, 0, 0
 
 def skriv_tekst(tekst, font, tekst_farge, x, y):
@@ -72,7 +72,7 @@ spill_ferdig = 0
 rikitg = False
 gamemeny = True
 higher_or_lower = False
-finish_the_lyrics = False
+leaderboard = False
 instillinger = False
 hoyre_tekst_farge = 255, 255, 255
 venstre_tekst_farge = 255, 255, 255
@@ -95,9 +95,9 @@ while run:
         horl_rect = horl_tekst.get_rect(center=(600, 400))
         skjerm.blit(horl_tekst, horl_rect)
 
-        ftl_tekst = tekst_font_mindre2.render("Finish the lyrics", True, ftl_farge)
-        ftl_rect = ftl_tekst.get_rect(center=(600, 470))
-        skjerm.blit(ftl_tekst, ftl_rect)
+        leaderboard_tekst = tekst_font_mindre2.render("Finish the lyrics", True, leaderboard_farge)
+        leaderboard_rect = leaderboard_tekst.get_rect(center=(600, 470))
+        skjerm.blit(leaderboard_tekst, leaderboard_rect)
 
         inst_tekst = tekst_font_mindre2.render("Instillinger", True, inst_farge)
         inst_rect = inst_tekst.get_rect(center=(600, 540))
@@ -112,10 +112,10 @@ while run:
         else:
             horl_farge = 0, 0, 0
 
-        if ftl_rect.collidepoint(mouse_pos):
+        if leaderboard_rect.collidepoint(mouse_pos):
             ftl_farge = 0, 0, 255
             if mouse_click[0]:
-                finish_the_lyrics = True
+                leaderboard = True
                 gamemeny = False
                 timer_start = pyg.time.get_ticks()
         else:
@@ -130,8 +130,8 @@ while run:
         else:
             inst_farge = 0, 0, 0
     else:
-        if finish_the_lyrics:
-            print("Hello, world!")
+        if leaderboard:
+            #skriv leadboard in her
         elif higher_or_lower:
 
             venstre_omrade = pyg.Rect(0, 0, 600, 800)
@@ -203,7 +203,6 @@ while run:
                             timer_start = pyg.time.get_ticks()
 
                 else:
-                    #martin
                     if bruker_gjett == "h" and int(forste_sang[total_streams_index]) > int(andre_sang[total_streams_index]) or bruker_gjett == "l" and int(forste_sang[total_streams_index]) < int(andre_sang[total_streams_index]):
                         skriv_tekst(f"Det er riktig, {storst_sang} har", tekst_font, (0, 0, 0), 600, 300)
                         skriv_tekst(f"{forkort_streams(mest_streams - minst_streams)} flere streams", tekst_font, (0, 0, 0), 600, 400)
@@ -250,7 +249,7 @@ while run:
                     skriv_tekst("damn", tekst_font, (0, 0, 0), 600, 300)
                     skriv_tekst(f"du fikk ingen riktig", tekst_font, (0, 0, 0), 600, 400)
         else:
-            print("hello")
+            #skriv settings in her
 
     for event in pyg.event.get():
         if event.type == pyg.QUIT:
