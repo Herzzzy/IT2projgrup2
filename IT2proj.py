@@ -80,6 +80,8 @@ venstre_tekst_farge = 255, 255, 255
 forste_sang, andre_sang = velg_sanger()
 
 run = True
+pyg.mixer.music.load("game_music.mp3")
+pyg.mixer.music.play(-1)
 while run:
 
     delta_tid = klokke.tick(60)
@@ -258,9 +260,6 @@ while run:
             run = False
 
     
-   
-pyg.mixer.music.load(game.music.mp3)
-pyg.mixer.music.play(-1)
 
 
 while run:  
