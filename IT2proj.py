@@ -14,9 +14,6 @@ with open(filnavn, encoding="utf-8-sig") as fil:
 
     rad = list(filinnhold)
 
-    if len(rad)>=100:
-        rad=rad[:100]
-
 def velg_sanger():
     ikke_riktig_sang = True
     while ikke_riktig_sang:
@@ -25,7 +22,7 @@ def velg_sanger():
         forste_sang = rad[rad_index]
         andre_sang = rad[rad_index2]
 
-        if rad_index != rad_index2 and len(forste_sang[sang_index]) < 10 and len(andre_sang[sang_index]) < 10:
+        if rad_index != rad_index2 and len(forste_sang[sang_index]) < 10 and len(andre_sang[sang_index]) < 10 and len(forste_sang[artist_index]) < 10  and len(andre_sang[artist_index]) < 10:
             ikke_riktig_sang = False
 
     return forste_sang, andre_sang
@@ -49,10 +46,15 @@ pyg.init()
 
 storrelse = [1200, 800]
 skjerm = pyg.display.set_mode((storrelse))
-skjerm_farge = 150, 255, 150
+skjerm_farge = 255, 255, 255
 
 tekst_font = pyg.font.SysFont(None, 100, bold=True)
 tekst_font_mindre = pyg.font.SysFont(None, 50, bold=True)
+tekst_font_storre = pyg.font.SysFont(None, 150, bold=True)
+tekst_font_mindre2 = pyg.font.SysFont(None, 75, bold=True)
+horl_farge = 0, 0, 0
+ftl_farge = 0, 0, 0
+inst_farge = 0, 0, 0
 
 def skriv_tekst(tekst, font, tekst_farge, x, y):
     img = font.render(tekst, True, tekst_farge)
@@ -68,87 +70,181 @@ neste_niva_delay = 0
 antall_riktig = 0
 spill_ferdig = 0
 rikitg = False
+gamemeny = True
+higher_or_lower = False
+finish_the_lyrics = False
+instillinger = False
+hoyre_tekst_farge = 255, 255, 255
+venstre_tekst_farge = 255, 255, 255
 
 forste_sang, andre_sang = velg_sanger()
 
 run = True
 while run:
 
-    delta_tid = klokke.tick(60) 
-
-    left_area = pyg.Rect(0, 0, 600, 800)
-    right_area = pyg.Rect(600, 0, 600, 800)
+    delta_tid = klokke.tick(60)
+    skjerm.fill((skjerm_farge))
 
     mouse_click = pyg.mouse.get_pressed()
     mouse_pos = pyg.mouse.get_pos() 
 
-    skjerm.fill((skjerm_farge))
+    if gamemeny:
+        skriv_tekst("IT2 prosjekt", tekst_font_storre, (0, 0, 0), 600, 280)
+    
+        horl_tekst = tekst_font_mindre2.render("Higher or Lower", True, horl_farge)
+        horl_rect = horl_tekst.get_rect(center=(600, 400))
+        skjerm.blit(horl_tekst, horl_rect)
 
-    if spill_ferdig < 3:
+        ftl_tekst = tekst_font_mindre2.render("Finish the lyrics", True, ftl_farge)
+        ftl_rect = ftl_tekst.get_rect(center=(600, 470))
+        skjerm.blit(ftl_tekst, ftl_rect)
 
-        skriv_tekst(f"{antall_riktig}/3", tekst_font_mindre, (0, 0, 0), 70, 50)
+        inst_tekst = tekst_font_mindre2.render("Instillinger", True, inst_farge)
+        inst_rect = inst_tekst.get_rect(center=(600, 540))
+        skjerm.blit(inst_tekst, inst_rect)
 
-        if int(forste_sang[total_streams_index]) > int(andre_sang[total_streams_index]):
-            mest_streams = int(forste_sang[total_streams_index])
-            storst_sang = forste_sang[sang_index]
-            minst_streams = int(andre_sang[total_streams_index])
-            minst_sang = andre_sang[sang_index]
+        if horl_rect.collidepoint(mouse_pos):
+            horl_farge = 0, 0, 255
+            if mouse_click[0]:
+                higher_or_lower = True
+                gamemeny = False
+                timer_start = pyg.time.get_ticks()
         else:
-            mest_streams = int(andre_sang[total_streams_index])
-            storst_sang = andre_sang[sang_index]
-            minst_streams = int(forste_sang[total_streams_index])
-            minst_sang = forste_sang[sang_index]
+            horl_farge = 0, 0, 0
 
-        if neste_niva:
-            neste_niva_delay += delta_tid 
-            if neste_niva_delay > 5000:
-                neste_niva = False
-                if rikitg:
-                    antall_riktig += 1
-                start_tekst = True
-                bruker_gjett = None
-                neste_niva_delay = 0
-                spill_ferdig += 1
-                rikitg = False
-                forste_sang, andre_sang = velg_sanger()
-
-        if start_tekst:
-            skriv_tekst(forste_sang[sang_index], tekst_font, (0, 0, 0), 300, 300)
-            skriv_tekst(f"-{forste_sang[artist_index]}", tekst_font, (0, 0, 0), 300, 400)
-            skriv_tekst(forkort_streams(forste_sang[total_streams_index]), tekst_font, (0, 0, 0), 300, 500)
-            skriv_tekst(andre_sang[sang_index], tekst_font, (0, 0, 0), 900, 300)
-            skriv_tekst(f"-{andre_sang[artist_index]}", tekst_font, (0, 0, 0), 900, 400)
-            skriv_tekst("..?..", tekst_font, (0, 0, 0), 900, 500)
+        if ftl_rect.collidepoint(mouse_pos):
+            ftl_farge = 0, 0, 255
+            if mouse_click[0]:
+                finish_the_lyrics = True
+                gamemeny = False
+                timer_start = pyg.time.get_ticks()
         else:
-            if bruker_gjett == "h" and int(forste_sang[total_streams_index]) > int(andre_sang[total_streams_index]) or bruker_gjett == "l" and int(forste_sang[total_streams_index]) < int(andre_sang[total_streams_index]):
-                skriv_tekst(f"Det er riktig, {storst_sang} har", tekst_font, (0, 0, 0), 600, 300)
-                skriv_tekst(f"{forkort_streams(mest_streams - minst_streams)} flere streams", tekst_font, (0, 0, 0), 600, 400)
-                skriv_tekst(f"enn {minst_sang}", tekst_font, (0, 0, 0), 600, 500)
-                neste_niva = True
-                rikitg = True
-            else:
-                skriv_tekst(f"Det er feil, {storst_sang} har", tekst_font, (0, 0, 0), 600, 300)
-                skriv_tekst(f"{forkort_streams(mest_streams - minst_streams)} flere streams", tekst_font, (0, 0, 0), 600, 400)
-                skriv_tekst(f"enn {minst_sang}", tekst_font, (0, 0, 0), 600, 500)
-                neste_niva = True
+            ftl_farge = 0, 0, 0
 
-        if mouse_click[0] and start_tekst: 
-            if left_area.collidepoint(mouse_pos): 
-                bruker_gjett = "h"
-                start_tekst = False
-            elif right_area.collidepoint(mouse_pos):  
-                bruker_gjett = "l"
-                start_tekst = False
-
-    else: 
-        if antall_riktig >= 2:
-            skriv_tekst("Bra jobba!", tekst_font, (0, 0, 0), 600, 300)
-            skriv_tekst(f"Du fikk {antall_riktig}/3 riktige", tekst_font, (0, 0, 0), 600, 400)
-        elif antall_riktig == 1:
-            skriv_tekst(f"Du fikk bare {antall_riktig}/3 riktig", tekst_font, (0, 0, 0), 600, 400)
+        if inst_rect.collidepoint(mouse_pos):
+            inst_farge = 0, 0, 255
+            if mouse_click[0]:
+                instillinger = True
+                gamemeny = False
+                timer_start = pyg.time.get_ticks()
         else:
-            skriv_tekst("damn", tekst_font, (0, 0, 0), 600, 300)
-            skriv_tekst(f"du fikk ingen riktig", tekst_font, (0, 0, 0), 600, 400)
+            inst_farge = 0, 0, 0
+    else:
+        if finish_the_lyrics:
+            print("Hello, world!")
+        elif higher_or_lower:
+
+            venstre_omrade = pyg.Rect(0, 0, 600, 800)
+            hoyre_omrade = pyg.Rect(600, 0, 600, 800)
+            pyg.draw.rect(skjerm, (255, 75, 75), venstre_omrade)
+            pyg.draw.rect(skjerm, (75, 75, 255), hoyre_omrade)
+
+
+            if spill_ferdig < 3:
+
+                skriv_tekst(f"{antall_riktig}/3", tekst_font_mindre, (255, 255, 255), 70, 50)
+
+                if int(forste_sang[total_streams_index]) > int(andre_sang[total_streams_index]):
+                    mest_streams = int(forste_sang[total_streams_index])
+                    storst_sang = forste_sang[sang_index]
+                    minst_streams = int(andre_sang[total_streams_index])
+                    minst_sang = andre_sang[sang_index]
+                else:
+                    mest_streams = int(andre_sang[total_streams_index])
+                    storst_sang = andre_sang[sang_index]
+                    minst_streams = int(forste_sang[total_streams_index])
+                    minst_sang = forste_sang[sang_index]
+
+                if neste_niva:
+                    neste_niva_delay += delta_tid 
+                    if neste_niva_delay > 5000:
+                        neste_niva = False
+                        if rikitg:
+                            antall_riktig += 1
+                        start_tekst = True
+                        bruker_gjett = None
+                        neste_niva_delay = 0
+                        spill_ferdig += 1
+                        rikitg = False
+                        forste_sang, andre_sang = velg_sanger()
+
+                if start_tekst:
+                    hoyre_sang_tekst = tekst_font.render(forste_sang[sang_index], True, (hoyre_tekst_farge))
+                    hoyre_sang_rect = hoyre_sang_tekst.get_rect(center=(300, 300))
+                    skjerm.blit(hoyre_sang_tekst, hoyre_sang_rect)
+
+                    hoyre_artist_tekst = tekst_font.render(forste_sang[artist_index], True, (hoyre_tekst_farge))
+                    hoyre_artist_rect = hoyre_sang_tekst.get_rect(center=(300, 400))
+                    skjerm.blit(hoyre_artist_tekst, hoyre_artist_rect)
+                    
+                    hoyre_streams_tekst = tekst_font.render(forkort_streams(forste_sang[total_streams_index]), True, (hoyre_tekst_farge))
+                    hoyre_streams_rect = hoyre_streams_tekst.get_rect(center=(300, 500))
+                    skjerm.blit(hoyre_streams_tekst, hoyre_streams_rect)
+                    
+                    venstre_sang_tekst = tekst_font.render(andre_sang[sang_index], True, (venstre_tekst_farge))
+                    venstre_sang_rect = venstre_sang_tekst.get_rect(center=(900, 300))
+                    skjerm.blit(venstre_sang_tekst, venstre_sang_rect)
+                    
+                    venstre_artist_tekst = tekst_font.render(andre_sang[artist_index], True, (venstre_tekst_farge))
+                    venstre_artist_rect = venstre_artist_tekst.get_rect(center=(900,400))
+                    skjerm.blit(venstre_artist_tekst, venstre_artist_rect)
+                    
+                    venstre_streams_tekst = tekst_font.render("..?..", True, (venstre_tekst_farge))
+                    venstre_streams_rect = venstre_streams_tekst.get_rect(center=(900,500))
+                    skjerm.blit(venstre_streams_tekst, venstre_streams_rect)
+
+                    skriv_tekst("høyre eller venstre?", tekst_font_mindre, (255, 255, 255), 600, 650)
+
+                    if inst_rect.collidepoint(mouse_pos):
+                        inst_farge = 0, 0, 255
+                        if mouse_click[0]:
+                            instillinger = True
+                            gamemeny = False
+                            timer_start = pyg.time.get_ticks()
+
+                else:
+                    #martin
+                    if bruker_gjett == "h" and int(forste_sang[total_streams_index]) > int(andre_sang[total_streams_index]) or bruker_gjett == "l" and int(forste_sang[total_streams_index]) < int(andre_sang[total_streams_index]):
+                        skriv_tekst(f"Det er riktig, {storst_sang} har", tekst_font, (0, 0, 0), 600, 300)
+                        skriv_tekst(f"{forkort_streams(mest_streams - minst_streams)} flere streams", tekst_font, (0, 0, 0), 600, 400)
+                        skriv_tekst(f"enn {minst_sang}", tekst_font, (0, 0, 0), 600, 500)
+                        neste_niva = True
+                        rikitg = True
+                    else:
+                        skriv_tekst(f"Det er feil, {storst_sang} har", tekst_font, (0, 0, 0), 600, 300)
+                        skriv_tekst(f"{forkort_streams(mest_streams - minst_streams)} flere streams", tekst_font, (0, 0, 0), 600, 400)
+                        skriv_tekst(f"enn {minst_sang}", tekst_font, (0, 0, 0), 600, 500)
+                        neste_niva = True
+                
+                tid_etter_start = pyg.time.get_ticks()
+
+                if tid_etter_start - timer_start >= 1000:
+                    if hoyre_omrade.collidepoint(mouse_pos): 
+                        hoyre_tekst_farge = 200, 200, 200
+                        if mouse_click[0] and start_tekst: 
+                            bruker_gjett = "h"
+                            start_tekst = False
+                    else:
+                        hoyre_tekst_farge = 255, 255 ,255
+                    if venstre_omrade.collidepoint(mouse_pos):  
+                        venstre_tekst_farge = 200, 200, 200
+                        if mouse_click[0] and start_tekst: 
+                            bruker_gjett = "l"
+                            start_tekst = False
+                    else:
+                        venstre_tekst_farge = 255, 255, 255
+
+            else: 
+                if antall_riktig >= 2:
+                    skriv_tekst("Bra jobba!", tekst_font, (0, 0, 0), 600, 300)
+                    skriv_tekst(f"Du fikk {antall_riktig}/3 riktige", tekst_font, (0, 0, 0), 600, 400)
+                elif antall_riktig == 1:
+                    skriv_tekst(f"Du fikk bare {antall_riktig}/3 riktig", tekst_font, (0, 0, 0), 600, 400)
+                else:
+                    skriv_tekst("damn", tekst_font, (0, 0, 0), 600, 300)
+                    skriv_tekst(f"du fikk ingen riktig", tekst_font, (0, 0, 0), 600, 400)
+        else:
+            print("hello")
 
     for event in pyg.event.get():
         if event.type == pyg.QUIT:
