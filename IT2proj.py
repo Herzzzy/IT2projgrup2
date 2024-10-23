@@ -175,7 +175,7 @@ while run:
                     skjerm.blit(hoyre_sang_tekst, hoyre_sang_rect)
 
                     hoyre_artist_tekst = tekst_font.render(forste_sang[artist_index], True, (hoyre_tekst_farge))
-                    hoyre_artist_rect = hoyre_sang_tekst.get_rect(center=(300, 400))
+                    hoyre_artist_rect = hoyre_artist_tekst.get_rect(center=(300, 400))
                     skjerm.blit(hoyre_artist_tekst, hoyre_artist_rect)
                     
                     hoyre_streams_tekst = tekst_font.render(forkort_streams(forste_sang[total_streams_index]), True, (hoyre_tekst_farge))
@@ -205,15 +205,15 @@ while run:
 
                 else:
                     if bruker_gjett == "h" and int(forste_sang[total_streams_index]) > int(andre_sang[total_streams_index]) or bruker_gjett == "l" and int(forste_sang[total_streams_index]) < int(andre_sang[total_streams_index]):
-                        skriv_tekst(f"Det er riktig, {storst_sang} har", tekst_font, (0, 0, 0), 600, 300)
-                        skriv_tekst(f"{forkort_streams(mest_streams - minst_streams)} flere streams", tekst_font, (0, 0, 0), 600, 400)
-                        skriv_tekst(f"enn {minst_sang}", tekst_font, (0, 0, 0), 600, 500)
+                        skriv_tekst(f"Det er riktig, {storst_sang} har", tekst_font, (255, 255, 255), 600, 300)
+                        skriv_tekst(f"{forkort_streams(mest_streams - minst_streams)} flere streams", tekst_font, (255, 255, 255), 600, 400)
+                        skriv_tekst(f"enn {minst_sang}", tekst_font, (255, 255, 255), 600, 500)
                         neste_niva = True
                         rikitg = True
                     else:
-                        skriv_tekst(f"Det er feil, {storst_sang} har", tekst_font, (0, 0, 0), 600, 300)
-                        skriv_tekst(f"{forkort_streams(mest_streams - minst_streams)} flere streams", tekst_font, (0, 0, 0), 600, 400)
-                        skriv_tekst(f"enn {minst_sang}", tekst_font, (0, 0, 0), 600, 500)
+                        skriv_tekst(f"Det er feil, {storst_sang} har", tekst_font, (255, 255, 255), 600, 300)
+                        skriv_tekst(f"{forkort_streams(mest_streams - minst_streams)} flere streams", tekst_font, (255, 255, 255), 600, 400)
+                        skriv_tekst(f"enn {minst_sang}", tekst_font, (255, 255, 255), 600, 500)
                         neste_niva = True
                 
                 tid_etter_start = pyg.time.get_ticks()
