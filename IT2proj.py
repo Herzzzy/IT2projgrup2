@@ -219,18 +219,24 @@ while run:
                 tid_etter_start = pyg.time.get_ticks()
 
                 if tid_etter_start - timer_start >= 1000:
-                    if hoyre_omrade.collidepoint(mouse_pos): 
-                        hoyre_tekst_farge = 200, 200, 200
+
+                    if (hoyre_sang_rect.collidepoint(mouse_pos) or 
+                        hoyre_artist_rect.collidepoint(mouse_pos) or 
+                        hoyre_streams_rect.collidepoint(mouse_pos)):
+                        hoyre_tekst_farge = 200, 200, 200  
                         if mouse_click[0] and start_tekst: 
-                            bruker_gjett = "h"
-                            start_tekst = False
+                            bruker_gjett = "h" 
+                            start_tekst = False 
                     else:
-                        hoyre_tekst_farge = 255, 255 ,255
-                    if venstre_omrade.collidepoint(mouse_pos):  
-                        venstre_tekst_farge = 200, 200, 200
+                        hoyre_tekst_farge = 255, 255, 255
+
+                    if (venstre_sang_rect.collidepoint(mouse_pos) or 
+                        venstre_artist_rect.collidepoint(mouse_pos) or 
+                        venstre_streams_rect.collidepoint(mouse_pos)):
+                        venstre_tekst_farge = 200, 200, 200 
                         if mouse_click[0] and start_tekst: 
-                            bruker_gjett = "l"
-                            start_tekst = False
+                            bruker_gjett = "l"  
+                            start_tekst = False 
                     else:
                         venstre_tekst_farge = 255, 255, 255
 
