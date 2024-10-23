@@ -257,6 +257,21 @@ while run:
         if event.type == pyg.QUIT:
             run = False
 
+    
+   
+pyg.mixer.music.load(game.music.mp3)
+pyg.mixer.music.play(-1)
+
+
+while run:  
+    for event in pyg.event.get():     
+        if event.type==pyg.quit():
+            run = False
+
+    pyg.display.update()
+
+pyg.mixer.music.stop()
+
     pyg.display.update()
 
 pyg.quit()
