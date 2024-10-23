@@ -132,6 +132,7 @@ while run:
     else:
         if leaderboard:
             #skriv leadboard in her
+            ma_bare_ha_noe_her = 2
         elif higher_or_lower:
 
             venstre_omrade = pyg.Rect(0, 0, 600, 800)
@@ -250,6 +251,7 @@ while run:
                     skriv_tekst(f"du fikk ingen riktig", tekst_font, (0, 0, 0), 600, 400)
         else:
             #skriv settings in her
+            ma_bare_ha_noe_her = 3
 
     for event in pyg.event.get():
         if event.type == pyg.QUIT:
