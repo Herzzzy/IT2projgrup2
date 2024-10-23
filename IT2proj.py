@@ -141,9 +141,9 @@ while run:
             pyg.draw.rect(skjerm, (75, 75, 255), hoyre_omrade)
 
 
-            if spill_ferdig < 3:
+            if spill_ferdig < 10:
 
-                skriv_tekst(f"{antall_riktig}/3", tekst_font_mindre, (255, 255, 255), 70, 50)
+                skriv_tekst(f"{antall_riktig}/10", tekst_font_mindre, (255, 255, 255), 70, 50)
 
                 if int(forste_sang[total_streams_index]) > int(andre_sang[total_streams_index]):
                     mest_streams = int(forste_sang[total_streams_index])
