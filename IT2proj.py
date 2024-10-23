@@ -241,10 +241,10 @@ while run:
                         venstre_tekst_farge = 255, 255, 255
 
             else: 
-                if antall_riktig >= 2:
+                if antall_riktig >= 5:
                     skriv_tekst("Bra jobba!", tekst_font, (0, 0, 0), 600, 300)
                     skriv_tekst(f"Du fikk {antall_riktig}/3 riktige", tekst_font, (0, 0, 0), 600, 400)
-                elif antall_riktig == 1:
+                elif 0 < antall_riktig < 5:
                     skriv_tekst(f"Du fikk bare {antall_riktig}/3 riktig", tekst_font, (0, 0, 0), 600, 400)
                 else:
                     skriv_tekst("damn", tekst_font, (0, 0, 0), 600, 300)
