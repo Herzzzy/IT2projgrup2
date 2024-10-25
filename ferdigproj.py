@@ -124,6 +124,8 @@ tbake_ledrbrd_farge = 0, 0, 0
 forste_sang, andre_sang = velg_sanger()
 
 run = True
+pyg.mixer.music.load("game_music.mp3")   #Legger til musikk
+pyg.mixer.music.play(-1)
 while run:
 
     delta_tid = klokke.tick(60)
@@ -333,6 +335,16 @@ while run:
                         enter_highscore = True
                     else:
                         navn_input += event.unicode
+
+while run:
+    for event in pyg.event.get():
+        if event.type==pyg.quit():
+            run = False
+
+    pyg.display.update()
+
+pyg.mixer.music.stop()
+                        
 
     pyg.display.update()
 
