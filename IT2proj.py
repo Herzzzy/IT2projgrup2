@@ -1,8 +1,11 @@
 import pygame as pyg
 import random as rd
+import pandas as pandasForSortingCSV 
 import csv
 
 filnavn = "spotify_data.csv"
+highscore_fil = "highscore_fil.csv"
+spiller_navn = input("Velg et kallenavn: ").upper()
 
 with open(filnavn, encoding="utf-8-sig") as fil:
     filinhold_ufiltrert = fil.read().replace("-", ",")
@@ -13,6 +16,10 @@ with open(filnavn, encoding="utf-8-sig") as fil:
     artist_index = 0  
 
     rad = list(filinnhold)
+
+    svar = ""
+    ditt_svar = ""
+    score = 0
 
 def velg_sanger():
     ikke_riktig_sang = True
@@ -63,21 +70,7 @@ def skriv_tekst(tekst, font, tekst_farge, x, y):
 
 klokke = pyg.time.Clock()
 
-bruker_gjett = None
-start_tekst = True
-neste_niva = False
-neste_niva_delay = 0
-antall_riktig = 0
-spill_ferdig = 0
-rikitg = False
-gamemeny = True
-higher_or_lower = False
-leaderboard = False
-instillinger = False
-hoyre_tekst_farge = 255, 255, 255
-venstre_tekst_farge = 255, 255, 255
-pa_nytt_farge = 255, 255, 255
-tokk_feil = False
+gamemeny=True
 
 forste_sang, andre_sang = velg_sanger()
 
@@ -91,6 +84,21 @@ while run:
     mouse_pos = pyg.mouse.get_pos() 
 
     if gamemeny:
+        bruker_gjett = None
+        start_tekst = True
+        neste_niva = False
+        neste_niva_delay = 0
+        antall_riktig = 0
+        rikitg = False
+        gamemeny = True
+        higher_or_lower = False
+        leaderboard = False
+        instillinger = False
+        avslutt_delay = 0
+        hoyre_tekst_farge = 255, 255, 255
+        venstre_tekst_farge = 255, 255, 255
+
+
         skriv_tekst("IT2 prosjekt", tekst_font_storre, (0, 0, 0), 600, 280)
     
         horl_tekst = tekst_font_mindre2.render("Higher or Lower", True, horl_farge)
@@ -115,7 +123,7 @@ while run:
             horl_farge = 0, 0, 0
 
         if leaderboard_rect.collidepoint(mouse_pos):
-            leaderboard_farge_farge = 0, 0, 255
+            ftl_farge = 0, 0, 255
             if mouse_click[0]:
                 leaderboard = True
                 gamemeny = False
@@ -133,8 +141,20 @@ while run:
             inst_farge = 0, 0, 0
     else:
         if leaderboard:
-            #skriv leadboard in her
-            ma_bare_ha_noe_her = 2
+            # angi datasettet
+            csvData = pandasForSortingCSV.read_csv("highscore_fil.csv") 
+
+            # sorterer dataene
+            csvData.sort_values(csvData.columns[1], axis=0, ascending=[False], inplace=True) 
+            y_position = 100  # Start y-position for the text
+            for i in range(10):
+                row = csvData.iloc[i]  # Access the specific row
+                text_to_display = f"{row[0]}: {row[1]}"  # Format the text (adjust column index as needed)
+                skriv_tekst(text_to_display, tekst_font_mindre2, (0, 0, 0), 600, y_position)
+                y_position += 50  # Move the y-position down for the next line (adjust based on font size)
+            
+            
+            
         elif higher_or_lower:
 
             venstre_omrade = pyg.Rect(0, 0, 600, 800)
@@ -143,9 +163,9 @@ while run:
             pyg.draw.rect(skjerm, (75, 75, 255), hoyre_omrade)
 
 
-            if tokk_feil == False:
+            if ditt_svar == svar:
 
-                skriv_tekst(f"{antall_riktig}/10", tekst_font_mindre, (255, 255, 255), 70, 50)
+                skriv_tekst(f"{antall_riktig}", tekst_font_mindre, (255, 255, 255), 70, 50)
 
                 if int(forste_sang[total_streams_index]) > int(andre_sang[total_streams_index]):
                     mest_streams = int(forste_sang[total_streams_index])
@@ -160,15 +180,16 @@ while run:
 
                 if neste_niva:
                     neste_niva_delay += delta_tid 
-                    if neste_niva_delay > 5000:
+                    if neste_niva_delay > 2500:
                         neste_niva = False
-                        antall_riktig += 1
+                        if rikitg:
+                            antall_riktig += 1
                         start_tekst = True
                         bruker_gjett = None
                         neste_niva_delay = 0
-                        spill_ferdig += 1
                         rikitg = False
                         forste_sang, andre_sang = velg_sanger()
+
 
                 if start_tekst:
                     hoyre_sang_tekst = tekst_font.render(forste_sang[sang_index], True, (hoyre_tekst_farge))
@@ -215,8 +236,28 @@ while run:
                         skriv_tekst(f"Det er feil, {storst_sang} har", tekst_font, (255, 255, 255), 600, 300)
                         skriv_tekst(f"{forkort_streams(mest_streams - minst_streams)} flere streams", tekst_font, (255, 255, 255), 600, 400)
                         skriv_tekst(f"enn {minst_sang}", tekst_font, (255, 255, 255), 600, 500)
-                        tokk_feil = True
+                        
+
+                        avslutt_delay += delta_tid
+                        if avslutt_delay > 2500: 
+                            if antall_riktig >= 5:
+                                skriv_tekst("Bra jobba!", tekst_font, (0, 0, 0), 600, 300)
+                                skriv_tekst(f"Du fikk {antall_riktig} riktige", tekst_font, (0, 0, 0), 600, 400)
+                                
+                            elif 0 < antall_riktig < 5:
+                                skriv_tekst(f"Du fikk bare {antall_riktig} riktig", tekst_font, (0, 0, 0), 600, 400)
+                            else:
+                                skriv_tekst("damn", tekst_font, (0, 0, 0), 600, 300)
+                                skriv_tekst(f"du fikk ingen riktig", tekst_font, (0, 0, 0), 600, 400)
+                        if avslutt_delay > 5000:
+                            gamemeny = True
+                            with open(highscore_fil, "a") as fil:
+                                fil.write(f"{spiller_navn},{antall_riktig} \n")
+            
+                            with open(highscore_fil, encoding="utf-8") as fil:
+                                innhold = fil.read()
                 
+
                 tid_etter_start = pyg.time.get_ticks()
 
                 if tid_etter_start - timer_start >= 1000:
@@ -240,22 +281,6 @@ while run:
                             start_tekst = False 
                     else:
                         venstre_tekst_farge = 255, 255, 255
-
-            else: 
-                skriv_tekst(f"Bra jobba, du fikk ", tekst_font, (255, 255, 255), 600, 300)
-                skriv_tekst(f" {antall_riktig}, antall riktig", tekst_font, (255, 255, 255), 600, 400)
-                pa_nytt_tekst = tekst_font_mindre2.render("gå til gamemeny", True, (pa_nytt_farge))
-                pa_nytt_rect = pa_nytt_tekst.get_rect(center=(600, 500))
-                skjerm.blit(pa_nytt_tekst, pa_nytt_rect)
-                if pa_nytt_rect.collidepoint(mouse_pos):
-                    pa_nytt_farge = 200, 200, 200
-                    if mouse_click[0]:
-                        higher_or_lower = False
-                        gamemeny = True
-                else:
-                    pa_nytt_farge = 255, 255, 255
-
-                        
         else:
             #skriv settings in her
             ma_bare_ha_noe_her = 3
